@@ -137,12 +137,12 @@ async fn update_response(
     let msg = if target.first_time {
         bot.send_message(target.chat_id, message)
             .in_reply_to(target.message_id)
-            .is_web_page_preview_disabled(true)
+            // .is_web_page_preview_disabled(true)
             .call()
             .await?
     } else {
         bot.edit_message_text(target.chat_id, target.message_id, message)
-            .is_web_page_preview_disabled(true)
+            // .is_web_page_preview_disabled(true)
             .call()
             .await?
     };

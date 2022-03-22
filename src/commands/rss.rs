@@ -61,7 +61,7 @@ pub async fn rss(
             .bot
             .send_message(chat_id, text)
             .in_reply_to(prev_msg)
-            .is_web_page_preview_disabled(true)
+            // .is_web_page_preview_disabled(true)
             .call()
             .await?;
         prev_msg = msg.id;
