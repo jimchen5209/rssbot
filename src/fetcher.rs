@@ -17,7 +17,7 @@ use tokio_util::time::DelayQueue;
 
 use crate::client::pull_feed;
 use crate::data::{Database, Feed, FeedUpdate};
-use crate::messages::{format_large_msg, Escape};
+use crate::messages::Escape;
 
 pub fn start(bot: Bot, db: Arc<Mutex<Database>>, min_interval: u32, max_interval: u32) {
     let mut queue = FetchQueue::new();
@@ -96,20 +96,20 @@ async fn fetch_and_push_updates(
     for update in updates {
         match update {
             FeedUpdate::Items(items) => {
-                let msgs =
-                    format_large_msg(format!("<b>{}</b>", Escape(&feed.title)), &items, |item| {
-                        let title = item
-                            .title
-                            .as_ref()
-                            .map(|s| s.as_str())
-                            .unwrap_or_else(|| &feed.title);
-                        let link = item
-                            .link
-                            .as_ref()
-                            .map(|s| s.as_str())
-                            .unwrap_or_else(|| &feed.link);
-                        format!("<a href=\"{}\">{}</a>", Escape(link), Escape(title))
-                    });
+                let msgs = items.iter().map(|item| {
+                    let title = item
+                        .title
+                        .as_ref()
+                        .map(|s| s.as_str())
+                        .unwrap_or_else(|| &feed.title);
+                    let link = item
+                        .link
+                        .as_ref()
+                        .map(|s| s.as_str())
+                        .unwrap_or_else(|| &feed.link);
+                    format!("<b>{}</b>\n<a href=\"{}\">{}</a>", Escape(&feed.title), Escape(link), Escape(title))
+                }).collect::<Vec<String>>();
+
                 for msg in msgs {
                     push_updates(
                         &bot,
