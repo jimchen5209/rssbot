@@ -22,7 +22,7 @@ jobs:
   test-locales:
     strategy:
       matrix:
-        locale: [zh, en]
+        locale: [zht, zh, en]
     runs-on: ubuntu-latest
 
     steps:
