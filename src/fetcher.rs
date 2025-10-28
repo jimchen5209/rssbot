@@ -97,16 +97,8 @@ async fn fetch_and_push_updates(
         match update {
             FeedUpdate::Items(items) => {
                 let msgs = items.iter().map(|item| {
-                    let title = item
-                        .title
-                        .as_ref()
-                        .map(|s| s.as_str())
-                        .unwrap_or_else(|| &feed.title);
-                    let link = item
-                        .link
-                        .as_ref()
-                        .map(|s| s.as_str())
-                        .unwrap_or_else(|| &feed.link);
+                    let title = item.title.as_deref().unwrap_or_else(|| &feed.title);
+                    let link = item.link.as_deref().unwrap_or_else(|| &feed.link);
                     format!("<b>{}</b>\n<a href=\"{}\">{}</a>", Escape(&feed.title), Escape(link), Escape(title))
                 }).collect::<Vec<String>>();
 
